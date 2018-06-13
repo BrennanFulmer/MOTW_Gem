@@ -7,11 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "MOTW"
   spec.version       = MOTW::VERSION
   spec.authors       = ["Brennan_Fulmer"]
-  spec.email         = ["31666354+BrennanFulmer@users.noreply.github.com"]
+  spec.email         = [""]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Movies Opening This Week is a Ruby Gem for finding out about recent releases and films in general}
+  spec.homepage      = "https://github.com/BrennanFulmer"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
