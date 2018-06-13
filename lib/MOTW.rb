@@ -1,5 +1,6 @@
-require "MOTW/version"
+require 'open-uri'
+require 'nokogiri'
+require 'pry'
 
-module MOTW
-  # Your code goes here...
-end
+require_relative './MOTW/version'
+require_relative './MOTW/scraper'
