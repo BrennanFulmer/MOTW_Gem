@@ -1,8 +1,6 @@
 class Scraper
-  # attr_accessor
 
-  def initialize
-=begin
+  def self.scrape_list
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
 
     imdb.css('div.list_item').each { |node|
@@ -17,9 +15,9 @@ class Scraper
       director = node.css('div.txt-block a')[0].text.strip if node.css('div.txt-block a')[0]
       duration = node.css('time').text.strip if node.css('time')
     }
-=end
+  end
 
-#=begin
+  def self.scrape_movie(search_term)
     search = 'incredibles_2'
     rt = Nokogiri::HTML(open('https://rottentomatoes.com/m/' + "#{search}"))
 
@@ -30,7 +28,7 @@ class Scraper
     critic_tomatometer = rt.css('div.critic-score')[0].text.strip if rt.css('div.critic-score')[0]
     user_tomatometer = rt.css('div.audience-score span.superPageFontColor').text.strip if rt.css('div.audience-score span.superPageFontColor')
       # TODO use collect then convert to string
-      cast = rt.css('div.cast-item span')[0].text.strip if rt.css('div.cast-item span')[0]
+      stars = rt.css('div.cast-item span')[0].text.strip if rt.css('div.cast-item span')[0]
       role = rt.css('div.cast-item span')[1].text.strip if rt.css('div.cast-item span')[1]
     rating = rt.css('li.meta-row div.meta-value')[0].text.strip if rt.css('li.meta-row div.meta-value')[0]
     director = rt.css('li.meta-row div.meta-value')[2].text.strip if rt.css('li.meta-row div.meta-value')[2]
@@ -41,9 +39,6 @@ class Scraper
       studio = rt.css('li.meta-row div.meta-value')[6].text.strip if rt.css('li.meta-row div.meta-value')[6]
     consensus = rt.css('p.critic_consensus')[0].text.strip
     year = rt.css('span.year')[0].text if rt.css('span.year')[0]
-#=end
-
-      binding.pry
   end
 
 end
