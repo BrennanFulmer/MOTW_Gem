@@ -1,6 +1,6 @@
 class Scraper
 
-  def self.johnra(element)
+  def self.jonra(element)
     if element.css('p.cert-runtime-genre span')[0]
       element.css('p.cert-runtime-genre span').collect { |genre|
         genre.text.strip
@@ -8,7 +8,7 @@ class Scraper
     end
   end
 
-  def self.cast(element)
+  def self.kast(element)
     if element.css('div.txt-block a')[1]
       element.css('div.txt-block a').collect { |star|
         star.text.strip
@@ -22,18 +22,19 @@ class Scraper
 
     imdb.css('div.list_item').each { |node|
       movie = {
-        title: if a = node.css('a')[1] then a.text.strip.split(' (')[0] end,
-        description: if b = node.css('div.outline') then b.text.strip end,
-        genre: johnra(node),
-        metascore: if c = node.css('div.rating_txt span') then c.text.strip end,
-        stars: cast(node),
-        rating: if d = node.css('img')[1] then d.attribute('title').value.strip end,
-        director: if e = node.css('div.txt-block a')[0] then e.text.strip end,
-        duration: if f = node.css('time') then f.text.strip end
+        cast: kast(node),
+        description: if a = node.css('div.outline') then a.text.strip end,
+        director: if b = node.css('div.txt-block a')[0] then b.text.strip end,
+        duration: if c = node.css('time') then c.text.strip end,
+        genre: jonra(node),
+        metascore: if d = node.css('div.rating_txt span') then d.text.strip end,
+        rating: if e = node.css('img')[1] then e.attribute('title').value.strip end,
+        title: if f = node.css('a')[1] then f.text.strip.split(' (')[0] end
       }
       movie[:rating] = '' unless movie[:rating]
       movie_list.push(movie)
     }
+    
     movie_list
   end
 

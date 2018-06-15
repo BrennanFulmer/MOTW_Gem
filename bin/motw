@@ -3,6 +3,9 @@
 require "bundler/setup"
 require "MOTW"
 
-Scraper.scrape_list
+m_list = Scraper.scrape_list
+
+Movie.create_from_collection(m_list)
+m_obj = Movie.all
 
 binding.pry

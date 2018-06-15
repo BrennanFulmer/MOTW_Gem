@@ -1,5 +1,5 @@
 class Movie
-  attr_accessor(:title, :description, :genre, :metascore, :stars, :rating,
+  attr_accessor(:title, :description, :genre, :metascore, :cast, :rating,
   :director, :duration, :critic_tomatometer, :user_tomatometer, :role, :rating,
   :writer, :studio, :consensus, :year)
 
