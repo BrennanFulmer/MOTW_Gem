@@ -1,38 +1,37 @@
 class Scraper
 
+  def self.johnra(element)
+    if element.css('p.cert-runtime-genre span')[0]
+      element.css('p.cert-runtime-genre span').collect { |genre|
+        genre.text.strip
+      }.join.gsub('|', ' | ')
+    end
+  end
+
+  def self.cast(element)
+    if element.css('div.txt-block a')[1]
+      element.css('div.txt-block a').collect { |star|
+        star.text.strip
+      }.drop(1).join(' | ')
+    end
+  end
+
   def self.scrape_list
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
     movie_list = []
 
     imdb.css('div.list_item').each { |node|
-
-      if node.css('p.cert-runtime-genre span')[0]
-        johnra = node.css('p.cert-runtime-genre span').collect { |genre|
-          genre.text.strip
-        }.uniq.join
-      else
-        johnra = 'zilch'
-      end
-
-      binding.pry
-
       movie = {
-        title: node.css('a')[1] ? node.css('a')[1].text.strip : 'zilch',
-        description: node.css('div.outline') ? node.css('div.outline').text.strip : 'zilch',
-        genre: johnra
-=begin
-        metascore = node.css('div.rating_txt span').text.strip if node.css('div.rating_txt span')
-
-          # TODO use collect then convert to string and ignore 0
-          stars = node.css('div.txt-block a')[1].text.strip if node.css('div.txt-block a')[1]
-
-        rating = node.css('img')[1].attribute('title').value.strip if node.css('img')[1]
-
-        director = node.css('div.txt-block a')[0].text.strip if node.css('div.txt-block a')[0]
-
-        duration = node.css('time').text.strip if node.css('time')
-=end
+        title: if a = node.css('a')[1] then a.text.strip.split(' (')[0] end,
+        description: if b = node.css('div.outline') then b.text.strip end,
+        genre: johnra(node),
+        metascore: if c = node.css('div.rating_txt span') then c.text.strip end,
+        stars: cast(node),
+        rating: if d = node.css('img')[1] then d.attribute('title').value.strip end,
+        director: if e = node.css('div.txt-block a')[0] then e.text.strip end,
+        duration: if f = node.css('time') then f.text.strip end
       }
+      movie[:rating] = '' unless movie[:rating]
       movie_list.push(movie)
     }
     movie_list
