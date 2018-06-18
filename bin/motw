@@ -3,6 +3,7 @@
 require "bundler/setup"
 require "MOTW"
 
+
 =begin
 m_list = Scraper.scrape_list
 
@@ -12,9 +13,11 @@ m_obj = Movie.all
 binding.pry
 =end
 
+
 # Scraper.scrape_movie
 
+
 Cli.new
-Movie.all
+
 
 binding.pry

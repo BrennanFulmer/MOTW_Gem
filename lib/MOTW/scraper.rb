@@ -3,6 +3,7 @@ TODO
 1. finish scrape_movie
 2. split methods into public, private, and maybe protected
 3. alphabetize methods
+4. if nil value processing is improved down the line remove it from here
 =end
 
 class Scraper
@@ -26,7 +27,7 @@ class Scraper
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
     movie_list = []
 
-    imdb.css('div.list_item').each { |node|
+    imdb.css('div.sub-list')[0].css('div.list_item').each { |node|
       movie = {
         cast: list_cast(node),
         description: if a = node.css('div.outline') then a.text.strip end,
@@ -39,6 +40,7 @@ class Scraper
       }
 
 =begin
+TODO
   is replacing nil with an empty string going to make handling this data
   easier? if not remove this part
 =end
