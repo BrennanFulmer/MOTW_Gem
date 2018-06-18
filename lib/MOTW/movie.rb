@@ -1,3 +1,4 @@
+
 class Movie
   attr_accessor(  :cast, :consensus, :critic_tomatometer, :description,
                   :director, :duration, :genre, :metascore, :rating, :rating,

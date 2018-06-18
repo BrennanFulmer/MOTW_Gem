@@ -1,6 +1,12 @@
-class Scraper
+=begin
+TODO
+1. finish scrape_movie
+2. split methods into public, private, and maybe protected
+3. alphabetize methods
+=end
 
-  def self.list_kast(element)
+class Scraper
+  def self.list_cast(element)
     if element.css('div.txt-block a')[1]
       element.css('div.txt-block a').collect { |star|
         star.text.strip
@@ -8,7 +14,7 @@ class Scraper
     end
   end
 
-  def self.list_jonra(element)
+  def self.list_genre(element)
     if element.css('p.cert-runtime-genre span')[0]
       element.css('p.cert-runtime-genre span').collect { |genre|
         genre.text.strip
@@ -22,23 +28,31 @@ class Scraper
 
     imdb.css('div.list_item').each { |node|
       movie = {
-        cast: list_kast(node),
+        cast: list_cast(node),
         description: if a = node.css('div.outline') then a.text.strip end,
         director: if b = node.css('div.txt-block a')[0] then b.text.strip end,
         duration: if c = node.css('time') then c.text.strip end,
-        genre: list_jonra(node),
-        metascore: if d = node.css('div.rating_txt span') then d.text.strip end,
+        genre: list_genre(node),
+        metascore: if d = node.css('div.rating_txt span')[0] then d.text.strip end,
         rating: if e = node.css('img')[1] then e.attribute('title').value.strip end,
         title: if f = node.css('a')[1] then f.text.strip.split(' (')[0] end
       }
-      movie[:rating] = '' unless movie[:rating]
+
+=begin
+  is replacing nil with an empty string going to make handling this data
+  easier? if not remove this part
+=end
+movie.each { |k, v|
+  movie[k] = '' unless movie[k]
+}
+
       movie_list.push(movie)
     }
 
     movie_list
   end
 
-  def self.film_types(page)
+  def self.movie_genre(page)
     if page.css('li.meta-row')[1].css('a')[0]
       page.css('li.meta-row')[1].css('a').collect { |type|
         type.text.strip
@@ -52,7 +66,7 @@ class Scraper
 
     film = {
       description: if g = rt.css('div.movie_synopsis') then g.text.strip end,
-      genre: film_types(rt),
+      genre: movie_genre(rt),
       title: if h = rt.css('h1.title')[0] then h.text.strip end
     }
 
@@ -63,7 +77,7 @@ class Scraper
       genre = rt.css('div.meta-value a')[0].text.strip if rt.css('div.meta-value a')[0]
     critic_tomatometer = rt.css('div.critic-score')[0].text.strip if rt.css('div.critic-score')[0]
     user_tomatometer = rt.css('div.audience-score span.superPageFontColor').text.strip if rt.css('div.audience-score span.superPageFontColor')
-      # TODO use collect then convert to string
+      # TODO use collect then convert to string, and combine these two
       cast = rt.css('div.cast-item span')[0].text.strip if rt.css('div.cast-item span')[0]
       role = rt.css('div.cast-item span')[1].text.strip if rt.css('div.cast-item span')[1]
     rating = rt.css('li.meta-row div.meta-value')[0].text.strip if rt.css('li.meta-row div.meta-value')[0]

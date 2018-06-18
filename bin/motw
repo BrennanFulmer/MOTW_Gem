@@ -12,4 +12,9 @@ m_obj = Movie.all
 binding.pry
 =end
 
-Scraper.scrape_movie
+# Scraper.scrape_movie
+
+Cli.new
+Movie.all
+
+binding.pry
