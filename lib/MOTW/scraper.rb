@@ -6,59 +6,64 @@ TODO
 =end
 
 class Scraper
-  def self.list_cast(element)
-    if element.css('div.txt-block a')[1]
-      element.css('div.txt-block a').collect { |star|
-        star.text.strip
-      }.drop(1).join(' | ')
-    end
-  end
-
-  def self.list_genre(element)
-    if element.css('p.cert-runtime-genre span')[0]
-      element.css('p.cert-runtime-genre span').collect { |genre|
-        genre.text.strip
-      }.join.gsub('|', ' | ')
-    end
-  end
-
-# add a method for .text.strip on a node
   def self.scrape_list
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
     movie_list = []
 
-    imdb.css('div.sub-list')[0].css('div.list_item').each { |node|
+    imdb.css('div.sub-list')[0].css('div.list_item').each { |element|
       movie = {
-        cast: list_cast(node),
-        description: if a = node.css('div.outline') then a.text.strip end,
-        director: if b = node.css('div.txt-block a')[0] then b.text.strip end,
-        duration: if c = node.css('time') then c.text.strip end,
-        genre: list_genre(node),
-        metascore: if d = node.css('div.rating_txt span')[0] then d.text.strip end,
-        rating: if e = node.css('img')[1] then e.attribute('title').value.strip end,
-        title: if f = node.css('a')[1] then f.text.strip.split(' (')[0] end
+        cast: list_cast( element ),
+        description: strip_text( element.css('div.outline') ),
+        director: strip_text( element.css('div.txt-block a')[0] ),
+        duration: strip_text( element.css('time') ),
+        genre: list_genre( element ),
+        metascore: strip_text( element.css('div.rating_txt span')[0] ),
+        rating: list_rating( element ),
+        title: list_title( element )
       }
-
-=begin
-TODO
-  is replacing nil with an empty string going to make handling this data
-  easier? if not remove this part
-=end
-movie.each { |k, v|
-  movie[k] = '' unless movie[k]
-}
-
       movie_list.push(movie)
     }
-
+    
     movie_list
   end
 
-  def self.movie_genre(page)
-    if page.css('li.meta-row')[1].css('a')[0]
-      page.css('li.meta-row')[1].css('a').collect { |type|
-        type.text.strip
-      }.join(' | ')
+  def self.list_cast(node)
+    if node.css('div.txt-block a')[1]
+      node.css('div.txt-block a').collect { |star|
+        star.text.strip
+      }.drop(1).join(' | ')
+    else
+      ''
+    end
+  end
+
+  def self.strip_text(node)
+    node ? node.text.strip : ''
+  end
+
+  def self.list_genre(node)
+    if node.css('p.cert-runtime-genre span')[0]
+      node.css('p.cert-runtime-genre span').collect { |genre|
+        genre.text.strip
+      }.join.gsub('|', ' | ')
+    else
+      ''
+    end
+  end
+
+  def self.list_rating(node)
+    if lr = node.css('img')[1]
+      lr.attribute('title').value.strip
+    else
+      ''
+    end
+  end
+
+  def self.list_title(node)
+    if lt = node.css('a')[1]
+      lt.text.strip.split(' (')[0]
+    else
+      ''
     end
   end
 
@@ -93,6 +98,14 @@ movie.each { |k, v|
     year = rt.css('span.year')[0].text.strip if rt.css('span.year')[0]
 =end
 binding.pry
+  end
+
+  def self.movie_genre(page)
+    if page.css('li.meta-row')[1].css('a')[0]
+      page.css('li.meta-row')[1].css('a').collect { |type|
+        type.text.strip
+      }.join(' | ')
+    end
   end
 
 end
