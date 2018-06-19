@@ -12,18 +12,18 @@ class Scraper
 
     imdb.css('div.sub-list')[0].css('div.list_item').each { |element|
       movie = {
-        cast: list_cast( element ),
+        cast: list_cast(element),
         description: strip_text( element.css('div.outline') ),
         director: strip_text( element.css('div.txt-block a')[0] ),
         duration: strip_text( element.css('time') ),
-        genre: list_genre( element ),
+        genre: list_genre(element),
         metascore: strip_text( element.css('div.rating_txt span')[0] ),
-        rating: list_rating( element ),
-        title: list_title( element )
+        rating: list_rating(element),
+        title: list_title(element)
       }
       movie_list.push(movie)
     }
-    
+
     movie_list
   end
 
