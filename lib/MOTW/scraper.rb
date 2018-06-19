@@ -2,8 +2,7 @@
 TODO
 1. finish scrape_movie
 2. split methods into public, private, and maybe protected
-3. alphabetize methods
-4. if nil value processing is improved down the line remove it from here
+3. if nil value processing is improved down the line remove it from here
 =end
 
 class Scraper
@@ -23,6 +22,7 @@ class Scraper
     end
   end
 
+# add a method for .text.strip on a node
   def self.scrape_list
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
     movie_list = []
