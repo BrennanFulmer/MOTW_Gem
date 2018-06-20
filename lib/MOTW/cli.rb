@@ -1,7 +1,5 @@
 
 class Cli
-  # attr_accessor :input
-
   def initialize
     screen_clear
     puts 'Welcome to Movies Opening this Week'
@@ -18,9 +16,9 @@ class Cli
 
     puts ''
     puts 'Please select an option by entering its number:'
-    puts '1. Show list of movies opening this week'
-    puts '2. Show detailed information on a movie'
-    puts '3. Exit'
+    puts '  1. Show list of movies opening this week'
+    puts '  2. Show detailed information on a movie'
+    puts '  3. Exit'
     puts ''
     input = gets.strip.downcase
 
@@ -39,22 +37,34 @@ class Cli
   end
 
   def movie_list
+    choice = nil
+
     screen_clear
     Movie.create_from_collection(Scraper.scrape_list)
 
     puts ''
     Movie.all.each_with_index { |v, i|
-      puts "#{i + 1}. #{v.title}"
-      puts "  #{v.metascore} Metascore" unless v.metascore == ''
+      line_one = "#{i + 1}. #{v.title}"
+      line_one += " (#{v.metascore} Metascore)" unless v.metascore == ''
+      puts line_one
       puts "#{v.description}"
       puts ''
     }
 
-=begin
-  options are more info on movie in the list, or exit
-  validation for list_choices
-  go to selected list choice
-=end
+    puts '  Enter a movies number for more information'
+    puts '  Or type exit to leave'
+
+    while choice != 'exit'
+      choice = gets.strip.downcase
+
+      if choice == 'exit'
+        exit
+      elsif choice.to_i.between?(1, Movie.all.length)
+        lookup_movie(choice.to_i - 1)
+      else
+        puts '  invalid input'
+      end
+    end
   end
 
 end
