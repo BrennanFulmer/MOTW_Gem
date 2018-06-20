@@ -83,7 +83,7 @@ class Scraper
       duration: movie_duration(rt),
       genre: movie_genre(rt),
       rating: strip_text( rt.css('li.meta-row div.meta-value')[0] ),
-      #studio: movie_studio(rt),
+      studio: movie_studio(rt),
       title: strip_text( rt.css('h1.title')[0] ),
       user_tomatometer: strip_text( rt.css('div.audience-score span.superPageFontColor') ),
       writer: strip_text( rt.css('li.meta-row div.meta-value')[3] ),
@@ -91,13 +91,10 @@ class Scraper
     }
 
 =begin
-      # TODO use collect then convert to string, and combine these two
-      cast = rt.css('div.cast-item span')[0].text.strip if rt.css('div.cast-item span')[0]
-      role = rt.css('div.cast-item span')[1].text.strip if rt.css('div.cast-item span')[1]
-      # if the movie is available on DVD its rt.css('li.meta-row div.meta-value')[7].text.strip
-      studio = rt.css('li.meta-row div.meta-value')[6].text.strip if rt.css('li.meta-row div.meta-value')[6]
+    TODO use collect then convert to string, and combine these two
+  cast = rt.css('div.cast-item span')[0].text.strip if rt.css('div.cast-item span')[0]
+  role = rt.css('div.cast-item span')[1].text.strip if rt.css('div.cast-item span')[1]
 =end
-  movie_studio(rt)
 binding.pry
   end
 
@@ -125,12 +122,13 @@ binding.pry
   end
 
   def self.movie_studio(page)
-# rt.css('li.meta-row div.meta-value')[7].text.strip
+    meta_table = page.css('li.meta-row div.meta-value')
 
-    if page.css('li.meta-row div.meta-value')[0]
-      page.css('li.meta-row div.meta-value').each_with_index { |ele, index|
-        binding.pry
-        #return if ele.text.include?('minutes')
+    if meta_table && meta_table[0]
+      meta_table.each_with_index { |ele, index|
+        if ele.text.include?('minutes')
+          return meta_table[index + 1].text.strip
+        end
       }
     else
       ''

@@ -43,11 +43,11 @@ class Cli
     Movie.create_from_collection(Scraper.scrape_list)
 
     puts ''
-    Movie.all.each_with_index { |v, i|
-      line_one = "#{i + 1}. #{v.title}"
-      line_one += " (#{v.metascore} Metascore)" unless v.metascore == ''
+    Movie.all.each_with_index { |film, index|
+      line_one = "#{index + 1}. #{film.title}"
+      line_one += " (#{film.metascore} Metascore)" unless film.metascore == ''
       puts line_one
-      puts "#{v.description}"
+      puts "#{film.description}"
       puts ''
     }
     puts '  Enter a movies number for more information'
