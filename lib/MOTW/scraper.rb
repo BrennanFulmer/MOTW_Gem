@@ -67,37 +67,51 @@ class Scraper
     end
   end
 
-  def self.scrape_movie # (search_term)
-    search = 'incredibles_2'
-    rt = Nokogiri::HTML(open("https://rottentomatoes.com/m/#{search}"))
+  def self.scrape_movie(film_name)
+=begin
+    'princess_bride'
+    'incredibles_2'
+=end
+    rt = Nokogiri::HTML(open("https://rottentomatoes.com/m/#{film_name}"))
 
     film = {
-      description: if g = rt.css('div.movie_synopsis') then g.text.strip end,
+      # strip out extra spacing and attribute title
+      # consensus: strip_text( rt.css('p.critic_consensus')[0] ),
+      critic_tomatometer: strip_text( rt.css('div.critic-score')[0] ),
+      description: strip_text( rt.css('div.movie_synopsis') ),
+      director: strip_text( rt.css('li.meta-row div.meta-value')[2] ),
+      duration: movie_duration(rt),
       genre: movie_genre(rt),
-      title: if h = rt.css('h1.title')[0] then h.text.strip end
+      rating: strip_text( rt.css('li.meta-row div.meta-value')[0] ),
+      #studio: movie_studio(rt),
+      title: strip_text( rt.css('h1.title')[0] ),
+      user_tomatometer: strip_text( rt.css('div.audience-score span.superPageFontColor') ),
+      writer: strip_text( rt.css('li.meta-row div.meta-value')[3] ),
+      year: strip_text(  rt.css('span.year')[0] )
     }
 
 =begin
-    title = rt.css('h1.title')[0].text.strip if rt.css('h1.title')[0]
-    description = rt.css('div.movie_synopsis').text.strip if rt.css('div.movie_synopsis')
-      # TODO use collect then convert to string
-      genre = rt.css('div.meta-value a')[0].text.strip if rt.css('div.meta-value a')[0]
-    critic_tomatometer = rt.css('div.critic-score')[0].text.strip if rt.css('div.critic-score')[0]
-    user_tomatometer = rt.css('div.audience-score span.superPageFontColor').text.strip if rt.css('div.audience-score span.superPageFontColor')
       # TODO use collect then convert to string, and combine these two
       cast = rt.css('div.cast-item span')[0].text.strip if rt.css('div.cast-item span')[0]
       role = rt.css('div.cast-item span')[1].text.strip if rt.css('div.cast-item span')[1]
-    rating = rt.css('li.meta-row div.meta-value')[0].text.strip if rt.css('li.meta-row div.meta-value')[0]
-    director = rt.css('li.meta-row div.meta-value')[2].text.strip if rt.css('li.meta-row div.meta-value')[2]
-      # if the movie is available on DVD its rt.css('div.meta-value time')[2].text.strip
-      duration = rt.css('div.meta-value time')[1].text.strip if rt.css('div.meta-value time')[1]
-    writer = rt.css('li.meta-row div.meta-value')[3].text.strip if rt.css('li.meta-row div.meta-value')[3]
       # if the movie is available on DVD its rt.css('li.meta-row div.meta-value')[7].text.strip
       studio = rt.css('li.meta-row div.meta-value')[6].text.strip if rt.css('li.meta-row div.meta-value')[6]
-    consensus = rt.css('p.critic_consensus')[0].text.strip
-    year = rt.css('span.year')[0].text.strip if rt.css('span.year')[0]
 =end
+  movie_studio(rt)
 binding.pry
+  end
+
+  def self.movie_duration(page)
+    time_1 = page.css('div.meta-value time')[1]
+    time_2 = page.css('div.meta-value time')[2]
+
+    if time_1 && time_1.text.include?('minutes')
+      time_1.text.strip
+    elsif time_2 && time_2.text.include?('minutes')
+      time_2.text.strip
+    else
+      ''
+    end
   end
 
   def self.movie_genre(page)
@@ -105,6 +119,21 @@ binding.pry
       page.css('li.meta-row')[1].css('a').collect { |type|
         type.text.strip
       }.join(' | ')
+    else
+      ''
+    end
+  end
+
+  def self.movie_studio(page)
+# rt.css('li.meta-row div.meta-value')[7].text.strip
+
+    if page.css('li.meta-row div.meta-value')[0]
+      page.css('li.meta-row div.meta-value').each_with_index { |ele, index|
+        binding.pry
+        #return if ele.text.include?('minutes')
+      }
+    else
+      ''
     end
   end
 

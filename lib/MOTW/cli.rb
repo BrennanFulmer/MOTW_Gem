@@ -50,7 +50,6 @@ class Cli
       puts "#{v.description}"
       puts ''
     }
-
     puts '  Enter a movies number for more information'
     puts '  Or type exit to leave'
 
