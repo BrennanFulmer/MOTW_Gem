@@ -1,9 +1,5 @@
-=begin
-TODO
-1. finish scrape_movie
-2. split methods into public, private, and maybe protected
-3. if nil value processing is improved down the line remove it from here
-=end
+
+# TODO split methods into public, private, and maybe protected
 
 class Scraper
   def self.scrape_list
@@ -68,15 +64,11 @@ class Scraper
   end
 
   def self.scrape_movie(film_name)
-=begin
-    'princess_bride'
-    'incredibles_2'
-=end
     rt = Nokogiri::HTML(open("https://rottentomatoes.com/m/#{film_name}"))
 
     film = {
-      # strip out extra spacing and attribute title
-      # consensus: strip_text( rt.css('p.critic_consensus')[0] ),
+      cast: movie_cast(rt),
+      consensus: movie_consensus(rt),
       critic_tomatometer: strip_text( rt.css('div.critic-score')[0] ),
       description: strip_text( rt.css('div.movie_synopsis') ),
       director: strip_text( rt.css('li.meta-row div.meta-value')[2] ),
@@ -85,17 +77,40 @@ class Scraper
       rating: strip_text( rt.css('li.meta-row div.meta-value')[0] ),
       studio: movie_studio(rt),
       title: strip_text( rt.css('h1.title')[0] ),
-      user_tomatometer: strip_text( rt.css('div.audience-score span.superPageFontColor') ),
+      user_tomatometer: user_tomatometer(rt),
       writer: strip_text( rt.css('li.meta-row div.meta-value')[3] ),
       year: strip_text(  rt.css('span.year')[0] )
     }
+  end
 
-=begin
-    TODO use collect then convert to string, and combine these two
-  cast = rt.css('div.cast-item span')[0].text.strip if rt.css('div.cast-item span')[0]
-  role = rt.css('div.cast-item span')[1].text.strip if rt.css('div.cast-item span')[1]
-=end
-binding.pry
+  def self.movie_cast(page)
+    with_role = []
+
+    if page.css('div.cast-item span')[0]
+      page.css('div.cast-item span').each_with_index { |value, key|
+        star = value.text.strip
+
+        if star[0..2] == 'as '
+          with_role[-1] += " #{star}"
+        else
+          with_role << star
+        end
+      }
+
+      with_role
+    else
+      ''
+    end
+  end
+
+  def self.movie_consensus(page)
+    mc = page.css('p.critic_consensus')[0]
+
+    if mc && !mc.text.include?('No consensus yet.')
+      mc.text.split('Critics Consensus:')[1].strip
+    else
+      ''
+    end
   end
 
   def self.movie_duration(page)
@@ -130,6 +145,18 @@ binding.pry
           return meta_table[index + 1].text.strip
         end
       }
+      ''
+    else
+      ''
+    end
+  end
+
+  def self.user_tomatometer(page)
+    score = page.css('div.meter-value span.superPageFontColor').text.strip
+    context = page.css('div.meter-value div.superPageFontColor').text.strip
+
+    unless score == '' || context == 'want to see'
+      score
     else
       ''
     end
