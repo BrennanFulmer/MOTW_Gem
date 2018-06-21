@@ -1,5 +1,9 @@
 
-# TODO split methods into public, private, and maybe protected
+=begin
+  TODO
+  1. look for ways to make this shorter/faster
+  2. split methods into public, private, and maybe protected
+=end
 
 class Scraper
   def self.scrape_list
@@ -14,7 +18,7 @@ class Scraper
         duration: strip_text( element.css('time') ),
         genre: list_genre(element),
         metascore: strip_text( element.css('div.rating_txt span')[0] ),
-        rating: list_rating(element),
+        rated: list_rated(element),
         title: list_title(element)
       }
       movie_list.push(movie)
@@ -47,7 +51,7 @@ class Scraper
     end
   end
 
-  def self.list_rating(node)
+  def self.list_rated(node)
     if lr = node.css('img')[1]
       lr.attribute('title').value.strip
     else
@@ -63,6 +67,14 @@ class Scraper
     end
   end
 
+=begin
+~~~ attributes to scrap if movie already exists (created from list), or modify
+    whats scraped in the first place?
+1. (unique values)
+2. cast
+3. description
+4. rating
+=end
   def self.scrape_movie(film_name)
     rt = Nokogiri::HTML(open("https://rottentomatoes.com/m/#{film_name}"))
 
@@ -74,7 +86,7 @@ class Scraper
       director: strip_text( rt.css('li.meta-row div.meta-value')[2] ),
       duration: movie_duration(rt),
       genre: movie_genre(rt),
-      rating: strip_text( rt.css('li.meta-row div.meta-value')[0] ),
+      rated: strip_text( rt.css('li.meta-row div.meta-value')[0] ),
       studio: movie_studio(rt),
       title: strip_text( rt.css('h1.title')[0] ),
       user_tomatometer: user_tomatometer(rt),

@@ -1,4 +1,16 @@
 
+=begin
+  TODO
+  1. cli interaction for movie lookup (both initial menu option and post list)
+
+  2. need to do something to ensure duplicate movies aren't scraped, and list
+  doesn't include movies that were looked up
+
+  3. add an exit method with a goodbye message
+
+  4. improve welcome message
+=end
+
 class Cli
   def initialize
     screen_clear
@@ -27,7 +39,7 @@ class Cli
       when '1'
         movie_list
       when '2'
-        lookup_movie
+        lookup_movie # TODO this will likely need to be changed
       when '3' || 'exit'
         exit
       end
@@ -59,11 +71,30 @@ class Cli
       if choice == 'exit'
         exit
       elsif choice.to_i.between?(1, Movie.all.length)
-        lookup_movie(choice.to_i - 1)
+        more_movie(choice.to_i - 1) # TODO this will likely need to be changed
       else
         puts '  invalid input'
       end
     end
+  end
+
+  def lookup_movie
+    screen_clear
+    puts 'Please enter the name of the movie you want to lookup'
+    puts 'Or type exit to leave'
+    search_term = gets.strip.downcase.gsub(/\s+/i, '_')
+
+    case search_term
+    when 'exit'
+      exit
+    else
+      result = Scraper.scrape_movie(search_term)
+binding.pry
+      Movie.new(result)
+    end
+
+    # puts Movie.all[-1]
+binding.pry
   end
 
 end

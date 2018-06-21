@@ -1,7 +1,7 @@
 
 class Movie
   attr_accessor(  :cast, :consensus, :critic_tomatometer, :description,
-                  :director, :duration, :genre, :metascore, :rating, :role,
+                  :director, :duration, :genre, :metascore, :rated, :role,
                   :studio, :title, :user_tomatometer, :writer, :year  )
   @@all = []
 
