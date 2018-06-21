@@ -4,7 +4,7 @@
   1. cli interaction for movie lookup (both initial menu option and post list)
 
   2. need to do something to ensure duplicate movies aren't scraped, and list
-  doesn't include movies that were looked up
+  doesn't include movies that aren't going to be released soon
 
   3. add an exit method with a goodbye message
 
@@ -63,6 +63,7 @@ class Cli
       puts ''
     }
     puts '  Enter a movies number for more information'
+# should offer option to lookup unrelated movie
     puts '  Or type exit to leave'
 
     while choice != 'exit'
@@ -89,8 +90,8 @@ class Cli
       exit
     else
       result = Scraper.scrape_movie(search_term)
-binding.pry
       Movie.new(result)
+binding.pry
     end
 
     # puts Movie.all[-1]

@@ -12,14 +12,14 @@ class Scraper
 
     imdb.css('div.sub-list')[0].css('div.list_item').each { |element|
       movie = {
-        cast: list_cast(element),
+        # cast: list_cast(element),
         description: strip_text( element.css('div.outline') ),
-        director: strip_text( element.css('div.txt-block a')[0] ),
-        duration: strip_text( element.css('time') ),
-        genre: list_genre(element),
+        # director: strip_text( element.css('div.txt-block a')[0] ),
+        # duration: strip_text( element.css('time') ),
+        # genre: list_genre(element),
         metascore: strip_text( element.css('div.rating_txt span')[0] ),
-        rated: list_rated(element),
-        title: list_title(element)
+        # rated: list_rated(element),
+        title: scrape_title( element.css('a')[1] )
       }
       movie_list.push(movie)
     }
@@ -27,6 +27,7 @@ class Scraper
     movie_list
   end
 
+=begin
   def self.list_cast(node)
     if node.css('div.txt-block a')[1]
       node.css('div.txt-block a').collect { |star|
@@ -36,11 +37,13 @@ class Scraper
       ''
     end
   end
+=end
 
   def self.strip_text(node)
     node ? node.text.strip : ''
   end
 
+=begin
   def self.list_genre(node)
     if node.css('p.cert-runtime-genre span')[0]
       node.css('p.cert-runtime-genre span').collect { |genre|
@@ -58,22 +61,20 @@ class Scraper
       ''
     end
   end
+=end
 
-  def self.list_title(node)
-    if lt = node.css('a')[1]
-      lt.text.strip.split(' (')[0]
-    else
-      ''
-    end
+  def self.scrape_title(title_node)
+    title_node ? title_node.text.strip.split(' (')[0] : ''
   end
 
 =begin
-~~~ attributes to scrap if movie already exists (created from list), or modify
-    whats scraped in the first place?
-1. (unique values)
-2. cast
-3. description
-4. rating
+  attributes to scrap if movie already exists (created from list), or modify
+  whats scraped in the first place?
+      1. (unique values)
+      2. cast
+      3. description
+      4. rating
+      5. title
 =end
   def self.scrape_movie(film_name)
     rt = Nokogiri::HTML(open("https://rottentomatoes.com/m/#{film_name}"))
@@ -88,7 +89,7 @@ class Scraper
       genre: movie_genre(rt),
       rated: strip_text( rt.css('li.meta-row div.meta-value')[0] ),
       studio: movie_studio(rt),
-      title: strip_text( rt.css('h1.title')[0] ),
+      title: scrape_title( rt.css('h1.title')[1] ),
       user_tomatometer: user_tomatometer(rt),
       writer: strip_text( rt.css('li.meta-row div.meta-value')[3] ),
       year: strip_text(  rt.css('span.year')[0] )
@@ -109,7 +110,7 @@ class Scraper
         end
       }
 
-      with_role
+      with_role.join(' | ')
     else
       ''
     end
@@ -127,14 +128,17 @@ class Scraper
 
   def self.movie_duration(page)
     time_1 = page.css('div.meta-value time')[1]
-    time_2 = page.css('div.meta-value time')[2]
 
     if time_1 && time_1.text.include?('minutes')
       time_1.text.strip
-    elsif time_2 && time_2.text.include?('minutes')
-      time_2.text.strip
     else
-      ''
+      time_2 = page.css('div.meta-value time')[2]
+
+      if time_2 && time_2.text.include?('minutes')
+        time_2.text.strip
+      else
+        ''
+      end
     end
   end
 

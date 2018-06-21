@@ -14,6 +14,10 @@ class Movie
     @@all
   end
 
+  def self.reset!
+    all.clear
+  end
+
   def self.create_from_collection(movies_array)
     movies_array.each { |movie| new(movie) }
   end
