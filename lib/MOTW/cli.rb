@@ -39,7 +39,8 @@ class Cli
       when '1'
         movie_list
       when '2'
-        lookup_movie # TODO this will likely need to be changed
+        # TODO this will likely need to be changed
+        lookup_movie
       when '3' || 'exit'
         exit
       end
@@ -52,16 +53,19 @@ class Cli
     choice = nil
 
     screen_clear
-    Movie.create_from_collection(Scraper.scrape_list)
+    Movie.create_list( Scraper.scrape_list ) if Movie.list == []
 
     puts ''
-    Movie.all.each_with_index { |film, index|
+    Movie.list.each_with_index { |film, index|
       line_one = "#{index + 1}. #{film.title}"
       line_one += " (#{film.metascore} Metascore)" unless film.metascore == ''
       puts line_one
       puts "#{film.description}"
       puts ''
     }
+
+binding.pry
+
     puts '  Enter a movies number for more information'
 # should offer option to lookup unrelated movie
     puts '  Or type exit to leave'
@@ -71,8 +75,9 @@ class Cli
 
       if choice == 'exit'
         exit
-      elsif choice.to_i.between?(1, Movie.all.length)
-        more_movie(choice.to_i - 1) # TODO this will likely need to be changed
+      elsif choice.to_i.between?(1, Movie.list.length)
+        # TODO this will likely need to be changed
+        more_movie(choice.to_i - 1)
       else
         puts '  invalid input'
       end
@@ -89,12 +94,10 @@ class Cli
     when 'exit'
       exit
     else
-      result = Scraper.scrape_movie(search_term)
-      Movie.new(result)
+      result = Movie.new( Scraper.scrape_movie(search_term) )
 binding.pry
     end
 
-    # puts Movie.all[-1]
 binding.pry
   end
 
