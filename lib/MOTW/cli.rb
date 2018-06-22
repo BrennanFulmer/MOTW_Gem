@@ -84,8 +84,8 @@ class Cli
 
   def lookup_movie
     puts ''
-    puts 'Please enter the name of the movie you want to lookup'
-    puts 'Or type exit to leave'
+    puts '  Please enter the name of the movie you want to lookup'
+    puts '  Or type exit to leave'
     puts ''
     search_term = gets.strip.downcase.gsub(/\s+/i, '_')
 
@@ -98,6 +98,18 @@ class Cli
 
     puts ''
     puts "#{result.title}"
+    puts "#{result.critic_tomatometer}"
+    puts "#{result.user_tomatometer}"
+    puts "#{result.consensus}"
+    puts "#{result.description}"
+    puts "#{result.cast}"
+    puts "#{result.genre}"
+    puts "#{result.director}"
+    puts "#{result.studio}"
+    puts "#{result.writer}"
+    puts "#{result.rated}"
+    puts "#{result.duration}"
+    puts "#{result.year}"
     puts ''
 
 binding.pry
