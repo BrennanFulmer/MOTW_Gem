@@ -3,12 +3,9 @@
   TODO
   1. cli interaction for movie lookup (both initial menu option and post list)
 
-  2. need to do something to ensure duplicate movies aren't scraped, and list
-  doesn't include movies that aren't going to be released soon
+  2. add an exit method with a goodbye message
 
-  3. add an exit method with a goodbye message
-
-  4. improve welcome message
+  3. improve welcome message
 =end
 
 class Cli
@@ -50,8 +47,6 @@ class Cli
   end
 
   def movie_list
-    choice = nil
-
     screen_clear
     Movie.create_list( Scraper.scrape_list ) if Movie.list == []
 
@@ -64,12 +59,13 @@ class Cli
       puts ''
     }
 
-binding.pry
-
+    puts ''
     puts '  Enter a movies number for more information'
-# should offer option to lookup unrelated movie
-    puts '  Or type exit to leave'
+    puts "  or enter 'lookup' if you'd like more information on a different film"
+    puts '  otherwise type "exit" to leave'
+    puts ''
 
+    choice = nil
     while choice != 'exit'
       choice = gets.strip.downcase
 
@@ -78,6 +74,8 @@ binding.pry
       elsif choice.to_i.between?(1, Movie.list.length)
         # TODO this will likely need to be changed
         more_movie(choice.to_i - 1)
+      elsif choice == 'lookup'
+        lookup_movie
       else
         puts '  invalid input'
       end
@@ -85,9 +83,10 @@ binding.pry
   end
 
   def lookup_movie
-    screen_clear
+    puts ''
     puts 'Please enter the name of the movie you want to lookup'
     puts 'Or type exit to leave'
+    puts ''
     search_term = gets.strip.downcase.gsub(/\s+/i, '_')
 
     case search_term
@@ -95,8 +94,11 @@ binding.pry
       exit
     else
       result = Movie.new( Scraper.scrape_movie(search_term) )
-binding.pry
     end
+
+    puts ''
+    puts "#{result.title}"
+    puts ''
 
 binding.pry
   end

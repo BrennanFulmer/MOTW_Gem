@@ -1,9 +1,3 @@
-=begin
-  TODO
-  1. movies aren't saved by default
-
-  2. existing movies can't be recreated
-=end
 
 class Movie
   attr_accessor(  :cast, :consensus, :critic_tomatometer, :description,
