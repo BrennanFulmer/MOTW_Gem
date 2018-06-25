@@ -19,10 +19,10 @@ class Movie
   end
 
   def self.create_list(movies_array)
-    movies_array.each { |movie|
+    movies_array.each do |movie|
       film = new(movie)
       film.save
-    }
+    end
     list
   end
 

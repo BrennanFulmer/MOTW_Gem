@@ -50,13 +50,13 @@ class Cli
     Movie.create_list( Scraper.scrape_list ) if Movie.list == []
 
     puts ''
-    Movie.list.each_with_index { |film, index|
+    Movie.list.each_with_index do |film, index|
       line_one = "#{index + 1}. #{film.title}"
       line_one += " (#{film.metascore} Metascore)" unless film.metascore == ''
       puts line_one
       puts "#{film.description}"
       puts ''
-    }
+    end
 
     puts ''
     puts '  Enter a movies number for more information'
