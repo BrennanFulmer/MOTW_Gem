@@ -10,7 +10,7 @@
 =end
 
 class Cli
-  
+
   def start
     screen_clear
     puts 'Welcome to Movies Opening this Week'
@@ -38,7 +38,7 @@ class Cli
       when '1'
         movie_list
       when '2'
-        lookup_movie
+        search_target
       when '3' || 'exit'
         exit
       end
@@ -101,7 +101,6 @@ class Cli
       tv = Movie.new( Scraper.scrape_movie(search_term) )
     end
 
-# this needs to hide missing data
     screen_clear
     puts ''
     puts "  #{tv.title} - Tomatometer (#{tv.critic_tomatometer} critic) (#{tv.user_tomatometer} user)"
@@ -119,7 +118,6 @@ class Cli
     puts "  Rating: #{tv.rated}, Runtime: #{tv.duration}, Release Year: #{tv.year}"
     puts ''
 
-# add options
   end
 
 end

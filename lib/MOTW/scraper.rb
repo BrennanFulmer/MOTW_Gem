@@ -1,6 +1,6 @@
 
 class Scraper
-  
+
   def self.scrape_list
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
     movie_list = []
@@ -40,9 +40,14 @@ class Scraper
       studio: movie_studio( rt.css('li.meta-row div.meta-value') ),
       title: scrape_title( rt.css('h1.title')[1] ),
       user_tomatometer: user_tomatometer( rt ),
-      writer: strip_text( rt.css('li.meta-row div.meta-value')[3] ),
       year: strip_text( rt.css('span.year')[0] )
     }
+
+    unless film[:genre].include?('Documentary')
+      film[:writer] = strip_text( rt.css('li.meta-row div.meta-value')[3] )
+    end
+
+    film
   end
 
   def self.movie_cast(cast_node)
