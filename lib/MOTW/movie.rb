@@ -1,8 +1,7 @@
 
 class Movie
-  attr_accessor(  :cast, :consensus, :critic_tomatometer, :description,
-                  :director, :duration, :genre, :metascore, :rated, :role,
-                  :studio, :title, :user_tomatometer, :writer, :year  )
+  attr_accessor(  :cast, :critic_tomatometer, :description, :metascore, 
+                  :title, :user_tomatometer, :year  )
   @@list = []
 
   def initialize(movie_hash)

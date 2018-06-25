@@ -105,17 +105,11 @@ class Cli
     puts ''
     puts "  #{tv.title} - Tomatometer (#{tv.critic_tomatometer} critic) (#{tv.user_tomatometer} user)"
     puts ''
-    puts "  Critics Consensus: #{tv.consensus}"
-    puts ''
     puts "  Description: #{tv.description}"
     puts ''
     puts "  Starring: #{tv.cast}"
     puts ''
-    puts "  Genres: #{tv.genre}"
-    puts ''
-    puts "  Director: #{tv.director}, Studio: #{tv.studio}, Writer: #{tv.writer}"
-    puts ''
-    puts "  Rating: #{tv.rated}, Runtime: #{tv.duration}, Release Year: #{tv.year}"
+    puts "  Release Year: #{tv.year}"
     puts ''
 
   end
