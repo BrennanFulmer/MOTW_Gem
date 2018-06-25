@@ -1,11 +1,10 @@
 
 =begin
   TODO
-  1. cli interaction for movie lookup (both initial menu option and post list)
-
-  2. add an exit method with a goodbye message
-
-  3. improve welcome message
+  - make movie list option for more info by number work
+  - cli interaction for movie lookup (both initial menu option and post list)
+  - add an exit method with a goodbye message
+  - improve welcome message
 =end
 
 class Cli
