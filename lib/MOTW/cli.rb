@@ -9,7 +9,7 @@
 =end
 
 class Cli
-  def initialize
+  def start
     screen_clear
     puts 'Welcome to Movies Opening this Week'
     menu
