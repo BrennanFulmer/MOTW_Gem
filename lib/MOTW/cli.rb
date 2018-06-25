@@ -36,7 +36,6 @@ class Cli
       when '1'
         movie_list
       when '2'
-        # TODO this will likely need to be changed
         lookup_movie
       when '3' || 'exit'
         exit
@@ -93,24 +92,28 @@ class Cli
     when 'exit'
       exit
     else
-      result = Movie.new( Scraper.scrape_movie(search_term) )
+      tv = Movie.new( Scraper.scrape_movie(search_term) )
     end
 
+# this needs to hide missing data
+    screen_clear
     puts ''
-    puts "#{result.title}"
-    puts "#{result.critic_tomatometer}"
-    puts "#{result.user_tomatometer}"
-    puts "#{result.consensus}"
-    puts "#{result.description}"
-    puts "#{result.cast}"
-    puts "#{result.genre}"
-    puts "#{result.director}"
-    puts "#{result.studio}"
-    puts "#{result.writer}"
-    puts "#{result.rated}"
-    puts "#{result.duration}"
-    puts "#{result.year}"
+    puts "  #{tv.title} - Tomatometer (#{tv.critic_tomatometer} critic) (#{tv.user_tomatometer} user)"
     puts ''
+    puts "  Critics Consensus: #{tv.consensus}"
+    puts ''
+    puts "  Description: #{tv.description}"
+    puts ''
+    puts "  Starring: #{tv.cast}"
+    puts ''
+    puts "  Genres: #{tv.genre}"
+    puts ''
+    puts "  Director: #{tv.director}, Studio: #{tv.studio}, Writer: #{tv.writer}"
+    puts ''
+    puts "  Rating: #{tv.rated}, Runtime: #{tv.duration}, Release Year: #{tv.year}"
+    puts ''
+
+# add options
 
 binding.pry
   end
