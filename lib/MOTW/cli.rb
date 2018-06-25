@@ -1,13 +1,16 @@
 
 =begin
   TODO
-  - make movie list option for more info by number work
-  - cli interaction for movie lookup (both initial menu option and post list)
+  - movie lookup missing data handling and post options
   - add an exit method with a goodbye message
   - improve welcome message
+  - review checklist, SPEC, & README
+  - record walkthrough
+  - write blog post
 =end
 
 class Cli
+  
   def start
     screen_clear
     puts 'Welcome to Movies Opening this Week'
@@ -59,7 +62,7 @@ class Cli
 
     puts ''
     puts '  Enter a movies number for more information'
-    puts "  or enter 'lookup' if you'd like more information on a different film"
+    puts "  or enter 'lookup' if you'd like more information on a film"
     puts '  otherwise type "exit" to leave'
     puts ''
 
@@ -70,8 +73,9 @@ class Cli
       if choice == 'exit'
         exit
       elsif choice.to_i.between?(1, Movie.list.length)
-        # TODO this will likely need to be changed
-        more_movie(choice.to_i - 1)
+        selected_picture = Movie.list[choice.to_i - 1]
+        formatted_title = selected_picture.title.gsub(/\W+/, '_')
+        lookup_movie(formatted_title)
       elsif choice == 'lookup'
         lookup_movie
       else
@@ -80,13 +84,16 @@ class Cli
     end
   end
 
-  def lookup_movie
+  def search_target
     puts ''
     puts '  Please enter the name of the movie you want to lookup'
     puts '  Or type exit to leave'
     puts ''
     search_term = gets.strip.downcase.gsub(/\s+/i, '_')
+    lookup_movie(search_term)
+  end
 
+  def lookup_movie(search_term)
     case search_term
     when 'exit'
       exit
@@ -113,8 +120,6 @@ class Cli
     puts ''
 
 # add options
-
-binding.pry
   end
 
 end

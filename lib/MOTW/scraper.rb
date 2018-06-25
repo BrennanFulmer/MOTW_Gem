@@ -1,10 +1,6 @@
 
-=begin
-  TODO
-  - look for ways to make this shorter/faster
-=end
-
 class Scraper
+  
   def self.scrape_list
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
     movie_list = []
