@@ -9,7 +9,7 @@ class Scraper
       movie = {
         description: strip_text( element.css('div.outline') ),
         metascore: strip_text( element.css('div.rating_txt span')[0] ),
-        title: scrape_title( element.css('a')[1] )
+        title: strip_text( element.css('a')[1] ).split(' (')[0]
       }
       movie_list.push(movie)
     end
@@ -21,10 +21,6 @@ class Scraper
     node ? node.text.strip : ''
   end
 
-  def self.scrape_title(title_node)
-    title_node ? title_node.text.strip.split(' (')[0] : ''
-  end
-
   def self.scrape_movie(film_name)
     rt = Nokogiri::HTML(open("https://rottentomatoes.com/m/#{film_name}"))
 
@@ -32,7 +28,7 @@ class Scraper
       cast: movie_cast( rt.css('div.cast-item span') ),
       critic_tomatometer: strip_text( rt.css('div.critic-score')[0] ),
       description: strip_text( rt.css('div.movie_synopsis') ),
-      title: scrape_title( rt.css('h1.title')[1] ),
+      title: strip_text( rt.css('h2.panel-heading em')[0] ),
       user_tomatometer: user_tomatometer( rt ),
       year: strip_text( rt.css('span.year')[0] )
     }

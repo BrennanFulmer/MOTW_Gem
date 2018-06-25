@@ -59,7 +59,6 @@ class Cli
       puts "#{film.description}"
       puts ''
     end
-
     puts ''
     puts '  Enter a movies number for more information'
     puts "  or enter 'lookup' if you'd like more information on a film"
@@ -89,7 +88,7 @@ class Cli
     puts '  Please enter the name of the movie you want to lookup'
     puts '  Or type exit to leave'
     puts ''
-    search_term = gets.strip.downcase.gsub(/\s+/i, '_')
+    search_term = gets.strip.downcase.gsub(/\p{P}/, '').gsub(/\W+/, '_')
     lookup_movie(search_term)
   end
 
@@ -101,9 +100,17 @@ class Cli
       tv = Movie.new( Scraper.scrape_movie(search_term) )
     end
 
-    screen_clear
+    first_line = "  #{tv.title}"
+    if tv.critic_tomatometer != '' && tv.user_tomatometer != ''
+      first_line += " - Tomatometer (#{tv.critic_tomatometer} critic) (#{tv.user_tomatometer} user)"
+    elsif tv.critic_tomatometer != ''
+      first_line += " (Critic Tomatometer #{tv.critic_tomatometer})"
+    elsif tv.user_tomatometer != ''
+      first_line += " (User Tomatometer #{tv.user_tomatometer})"
+    end
+
     puts ''
-    puts "  #{tv.title} - Tomatometer (#{tv.critic_tomatometer} critic) (#{tv.user_tomatometer} user)"
+    puts first_line
     puts ''
     puts "  Description: #{tv.description}"
     puts ''
@@ -111,6 +118,8 @@ class Cli
     puts ''
     puts "  Release Year: #{tv.year}"
     puts ''
+
+
 
   end
 

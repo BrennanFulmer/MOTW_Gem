@@ -1,6 +1,6 @@
 
 class Movie
-  attr_accessor(  :cast, :critic_tomatometer, :description, :metascore, 
+  attr_accessor(  :cast, :critic_tomatometer, :description, :metascore,
                   :title, :user_tomatometer, :year  )
   @@list = []
 
@@ -19,13 +19,9 @@ class Movie
 
   def self.create_list(movies_array)
     movies_array.each do |movie|
-      film = new(movie)
-      film.save
+      list << new(movie)
     end
     list
   end
 
-  def save
-    self.class.list << self
-  end
 end
