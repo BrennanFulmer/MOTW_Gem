@@ -22,7 +22,7 @@ class Scraper
   end
 
   def self.scrape_movie(film_name)
-    rt = Nokogiri::HTML(open("https://rottentomatoes.com/m/#{film_name}"))
+    rt = Nokogiri::HTML(open("https://www.rottentomatoes.com/m/#{film_name}"))
 
     film = {
       cast: movie_cast( rt.css('div.cast-item span') ),
