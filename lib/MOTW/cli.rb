@@ -1,10 +1,4 @@
 
-=begin
-  TODO
-  - finish blog post
-  - record walkthrough
-=end
-
 class Cli
 
   def start
@@ -80,7 +74,9 @@ class Cli
       elsif choice == 'lookup'
         lookup_movie
       else
+        puts ''
         puts '  invalid input'
+        puts ''
         menu
       end
     end
