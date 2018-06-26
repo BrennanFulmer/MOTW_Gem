@@ -1,19 +1,23 @@
 
 =begin
   TODO
-  - movie lookup missing data handling and post options
-  - add an exit method with a goodbye message
-  - improve welcome message
+  - movie lookup post options (can't test right now RT might be blocking me)
   - review checklist, SPEC, & README
-  - record walkthrough
   - write blog post
+  - record walkthrough
 =end
 
 class Cli
 
   def start
     screen_clear
-    puts 'Welcome to Movies Opening this Week'
+    puts ''
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    puts '|                                       |'
+    puts '|  Welcome to Movies Opening This Week  |'
+    puts '|                                       |'
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    puts ''
     menu
   end
 
@@ -23,12 +27,12 @@ class Cli
   end
 
   def menu
-    options = ['1', '2', '3', 'exit']
+    options = ['1', '2', '3']
 
     puts ''
     puts 'Please select an option by entering its number:'
     puts '  1. Show list of movies opening this week'
-    puts '  2. Show detailed information on a movie'
+    puts '  2. Lookup detailed information on a movie'
     puts '  3. Exit'
     puts ''
     input = gets.strip.downcase
@@ -39,8 +43,8 @@ class Cli
         movie_list
       when '2'
         search_target
-      when '3' || 'exit'
-        exit
+      when '3'
+        goodbye
       end
     else
       menu
@@ -70,7 +74,7 @@ class Cli
       choice = gets.strip.downcase
 
       if choice == 'exit'
-        exit
+        goodbye
       elsif choice.to_i.between?(1, Movie.list.length)
         selected_picture = Movie.list[choice.to_i - 1]
         formatted_title = selected_picture.title.gsub(/\W+/, '_')
@@ -79,6 +83,7 @@ class Cli
         lookup_movie
       else
         puts '  invalid input'
+        menu
       end
     end
   end
@@ -95,7 +100,7 @@ class Cli
   def lookup_movie(search_term)
     case search_term
     when 'exit'
-      exit
+      goodbye
     else
       tv = Movie.new( Scraper.scrape_movie(search_term) )
     end
@@ -108,7 +113,6 @@ class Cli
     elsif tv.user_tomatometer != ''
       first_line += " (User Tomatometer #{tv.user_tomatometer})"
     end
-
     puts ''
     puts first_line
     puts ''
@@ -119,8 +123,20 @@ class Cli
     puts "  Release Year: #{tv.year}"
     puts ''
 
+    menu
+  end
 
-
+  def goodbye
+    puts ''
+    puts ''
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    puts '|                                             |'
+    puts '|  Thanks for using Movies Opening This Week  |'
+    puts '|                                             |'
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    puts ''
+    puts ''
+    exit
   end
 
 end
