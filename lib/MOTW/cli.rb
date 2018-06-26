@@ -1,8 +1,7 @@
 
 =begin
   TODO
-  - movie lookup post options, and handling searches that fail (can't test right now, RT might be blocking me)
-  - write blog post
+  - finish blog post
   - record walkthrough
 =end
 
@@ -104,23 +103,29 @@ class Cli
       tv = Movie.new( Scraper.scrape_movie(search_term) )
     end
 
-    first_line = "  #{tv.title}"
-    if tv.critic_tomatometer != '' && tv.user_tomatometer != ''
-      first_line += " - Tomatometer (#{tv.critic_tomatometer} critic) (#{tv.user_tomatometer} user)"
-    elsif tv.critic_tomatometer != ''
-      first_line += " (Critic Tomatometer #{tv.critic_tomatometer})"
-    elsif tv.user_tomatometer != ''
-      first_line += " (User Tomatometer #{tv.user_tomatometer})"
+    unless tv.title
+      puts ''
+      puts 'No results found.'
+      puts ''
+    else
+      first_line = "  #{tv.title}"
+      if tv.critic_tomatometer != '' && tv.user_tomatometer != ''
+        first_line += " - Tomatometer (#{tv.critic_tomatometer} critic) (#{tv.user_tomatometer} user)"
+      elsif tv.critic_tomatometer != ''
+        first_line += " (Critic Tomatometer #{tv.critic_tomatometer})"
+      elsif tv.user_tomatometer != ''
+        first_line += " (User Tomatometer #{tv.user_tomatometer})"
+      end
+      puts ''
+      puts first_line
+      puts ''
+      puts "  Description: #{tv.description}"
+      puts ''
+      puts "  Starring: #{tv.cast}"
+      puts ''
+      puts "  Release Year: #{tv.year}"
+      puts ''
     end
-    puts ''
-    puts first_line
-    puts ''
-    puts "  Description: #{tv.description}"
-    puts ''
-    puts "  Starring: #{tv.cast}"
-    puts ''
-    puts "  Release Year: #{tv.year}"
-    puts ''
 
     menu
   end

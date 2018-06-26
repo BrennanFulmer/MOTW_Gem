@@ -22,16 +22,20 @@ class Scraper
   end
 
   def self.scrape_movie(film_name)
-    rt = Nokogiri::HTML(open("https://www.rottentomatoes.com/m/#{film_name}"))
-
-    film = {
-      cast: movie_cast( rt.css('div.cast-item span') ),
-      critic_tomatometer: strip_text( rt.css('div.critic-score')[0] ),
-      description: strip_text( rt.css('div.movie_synopsis') ),
-      title: strip_text( rt.css('h2.panel-heading em')[0] ),
-      user_tomatometer: user_tomatometer( rt ),
-      year: strip_text( rt.css('span.year')[0] )
-    }
+    begin
+      rt = Nokogiri::HTML(open("https://www.rottentomatoes.com/m/#{film_name}"))
+    rescue OpenURI::HTTPError => error
+      film = {}
+    else
+      film = {
+        cast: movie_cast( rt.css('div.cast-item span') ),
+        critic_tomatometer: strip_text( rt.css('div.critic-score')[0] ),
+        description: strip_text( rt.css('div.movie_synopsis') ),
+        title: strip_text( rt.css('h2.panel-heading em')[0] ),
+        user_tomatometer: user_tomatometer( rt ),
+        year: strip_text( rt.css('span.year')[0] )
+      }
+    end
   end
 
   def self.movie_cast(cast_node)
