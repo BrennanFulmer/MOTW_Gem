@@ -1,8 +1,7 @@
 # MOTW
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/MOTW`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+The Movies Opening This Week rubygem is a CLI application to look up a list of new releases for the next 7 days and to lookup movies in general.
+It scrapes data from IMDB to create the weeks list and uses rotten tomatoes for pulling data on a specific movie.
 
 ## Installation
 
@@ -22,7 +21,8 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To launch the application browse to the root directory 'MOTW' in your commandline, and enter ./bin/motw.
+This will launch the software and from this point on follow the on screen directions.
 
 ## Development
 

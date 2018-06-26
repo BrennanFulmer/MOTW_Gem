@@ -1,8 +1,7 @@
 
 =begin
   TODO
-  - movie lookup post options (can't test right now RT might be blocking me)
-  - review checklist, SPEC, & README
+  - movie lookup post options, and handling searches that fail (can't test right now, RT might be blocking me)
   - write blog post
   - record walkthrough
 =end
