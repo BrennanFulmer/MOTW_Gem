@@ -3,18 +3,19 @@ class Scraper
 
   def self.scrape_list
     imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
-    movie_list = []
+    movie_elements = imdb.css('div.sub-list')[0].css('div.list_item')
 
-    imdb.css('div.sub-list')[0].css('div.list_item').each do |element|
+    movie_hashes = movie_elements.collect do |element|
       movie = {
         description: strip_text( element.css('div.outline') ),
         metascore: strip_text( element.css('div.rating_txt span')[0] ),
         title: strip_text( element.css('a')[1] ).split(' (')[0]
       }
-      movie_list.push(movie)
     end
 
-    movie_list
+    if Movie.list == []
+      Movie.create_list( movie_hashes )
+    end
   end
 
   def self.strip_text(node)
@@ -25,7 +26,7 @@ class Scraper
     begin
       rt = Nokogiri::HTML(open("https://www.rottentomatoes.com/m/#{film_name}"))
     rescue OpenURI::HTTPError => error
-      film = {}
+      nil
     else
       film = {
         cast: movie_cast( rt.css('div.cast-item span') ),
@@ -35,6 +36,7 @@ class Scraper
         user_tomatometer: user_tomatometer( rt ),
         year: strip_text( rt.css('span.year')[0] )
       }
+      Movie.new(film)
     end
   end
 

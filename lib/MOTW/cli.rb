@@ -1,8 +1,15 @@
 
+=begin
+  -invalid menu error for CLI.menu
+  -rework single movie scrape to be like movie list -scrape both in CLI and
+  Scraper class itself
+=end
+
 class Cli
 
   def start
-    screen_clear
+    system 'clear'
+    system 'cls'
     puts ''
     puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     puts '|                                       |'
@@ -11,11 +18,6 @@ class Cli
     puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     puts ''
     menu
-  end
-
-  def screen_clear
-    system 'clear'
-    system 'cls'
   end
 
   def menu
@@ -44,8 +46,7 @@ class Cli
   end
 
   def movie_list
-    screen_clear
-    Movie.create_list( Scraper.scrape_list ) if Movie.list == []
+    Scraper.scrape_list
 
     puts ''
     Movie.list.each_with_index do |film, index|
@@ -96,13 +97,12 @@ class Cli
     when 'exit'
       goodbye
     else
-      tv = Movie.new( Scraper.scrape_movie(search_term) )
+      tv = Scraper.scrape_movie(search_term)
     end
 
-    unless tv.title
+    unless tv
       puts ''
       puts 'No results found.'
-      puts ''
     else
       first_line = "  #{tv.title}"
       if tv.critic_tomatometer != '' && tv.user_tomatometer != ''
@@ -128,13 +128,11 @@ class Cli
 
   def goodbye
     puts ''
-    puts ''
     puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     puts '|                                             |'
     puts '|  Thanks for using Movies Opening This Week  |'
     puts '|                                             |'
     puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    puts ''
     puts ''
     exit
   end
