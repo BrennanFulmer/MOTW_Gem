@@ -14,8 +14,6 @@ class Scraper
     end
 
     Movie.create_list( movie_hashes )
-
-    Movie.list
   end
 
   def self.strip_text(node)
