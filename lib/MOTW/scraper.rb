@@ -13,7 +13,7 @@ class Scraper
       }
     end
 
-    Movie.create_list( movie_hashes ) if Movie.list == []
+    Movie.create_list( movie_hashes )
 
     Movie.list
   end
