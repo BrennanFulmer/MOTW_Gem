@@ -1,5 +1,6 @@
 
 class Cli
+  attr_accessor :user_input
 
   def start
     system 'clear'
@@ -23,10 +24,10 @@ class Cli
     puts '  2. Lookup detailed information on a movie'
     puts '  3. Exit'
     puts ''
-    input = gets.strip.downcase
+    self.user_input = gets.strip.downcase
 
-    if options.include?(input)
-      case input
+    if options.include?(self.user_input)
+      case self.user_input
       when '1'
         movie_list
       when '2'
@@ -58,18 +59,18 @@ class Cli
     puts '  otherwise type "exit" to leave'
     puts ''
 
-    choice = nil
-    while choice != 'exit'
-      choice = gets.strip.downcase
+    self.user_input = nil
+    while self.user_input != 'exit'
+      self.user_input = gets.strip.downcase
 
-      if choice == 'exit'
+      if self.user_input == 'exit'
         goodbye
-      elsif choice.to_i.between?(1, list.length)
-        selected_picture = list[choice.to_i - 1]
-        formatted_title = selected_picture.title.gsub(/\W+/, '_')
-        lookup_movie(formatted_title)
-      elsif choice == 'lookup'
+      elsif self.user_input.to_i.between?(1, list.length)
+        selected_picture = list[self.user_input.to_i - 1]
+        self.user_input = selected_picture.title.gsub(/\W+/, '_')
         lookup_movie
+      elsif self.user_input == 'lookup'
+        search_target
       else
         puts ''
         puts '  invalid input'
@@ -83,16 +84,16 @@ class Cli
     puts '  Please enter the name of the movie you want to lookup'
     puts '  Or type exit to leave'
     puts ''
-    search_term = gets.strip.downcase.gsub(/\p{P}/, '').gsub(/\W+/, '_')
-    lookup_movie(search_term)
+    self.user_input = gets.strip.downcase.gsub(/\p{P}/, '').gsub(/\W+/, '_')
+    lookup_movie
   end
 
-  def lookup_movie(search_term)
-    case search_term
+  def lookup_movie
+    case self.user_input
     when 'exit'
       goodbye
     else
-      tv = Scraper.scrape_movie(search_term)
+      tv = Scraper.scrape_movie(self.user_input)
     end
 
     unless tv
