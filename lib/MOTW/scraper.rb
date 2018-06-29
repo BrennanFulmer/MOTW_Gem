@@ -13,9 +13,9 @@ class Scraper
       }
     end
 
-    if Movie.list == []
-      Movie.create_list( movie_hashes )
-    end
+    Movie.create_list( movie_hashes ) if Movie.list == []
+
+    Movie.list
   end
 
   def self.strip_text(node)
@@ -36,6 +36,7 @@ class Scraper
         user_tomatometer: user_tomatometer( rt ),
         year: strip_text( rt.css('span.year')[0] )
       }
+
       Movie.new(film)
     end
   end

@@ -1,10 +1,4 @@
 
-=begin
-  -invalid menu error for CLI.menu
-  -rework single movie scrape to be like movie list -scrape both in CLI and
-  Scraper class itself
-=end
-
 class Cli
 
   def start
@@ -41,19 +35,21 @@ class Cli
         goodbye
       end
     else
+      puts ''
+      puts '  invalid input'
       menu
     end
   end
 
   def movie_list
-    Scraper.scrape_list
+    list = Scraper.scrape_list
 
     puts ''
-    Movie.list.each_with_index do |film, index|
+    list.each_with_index do |film, index|
       line_one = "#{index + 1}. #{film.title}"
       line_one += " (#{film.metascore} Metascore)" unless film.metascore == ''
       puts line_one
-      puts "#{film.description}"
+      puts "  #{film.description}"
       puts ''
     end
     puts ''
@@ -68,8 +64,8 @@ class Cli
 
       if choice == 'exit'
         goodbye
-      elsif choice.to_i.between?(1, Movie.list.length)
-        selected_picture = Movie.list[choice.to_i - 1]
+      elsif choice.to_i.between?(1, list.length)
+        selected_picture = list[choice.to_i - 1]
         formatted_title = selected_picture.title.gsub(/\W+/, '_')
         lookup_movie(formatted_title)
       elsif choice == 'lookup'
@@ -77,7 +73,6 @@ class Cli
       else
         puts ''
         puts '  invalid input'
-        puts ''
         menu
       end
     end
@@ -102,7 +97,7 @@ class Cli
 
     unless tv
       puts ''
-      puts 'No results found.'
+      puts '  No results found.'
     else
       first_line = "  #{tv.title}"
       if tv.critic_tomatometer != '' && tv.user_tomatometer != ''
