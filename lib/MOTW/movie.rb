@@ -5,14 +5,16 @@ class Movie
 
   def initialize(movie_hash)
     movie_hash.each do |key, value|
-      self.send( ("#{key}="), value )
+      self.send( ( "#{key}=" ), value )
     end
     self
   end
 
   def self.create_list(movies_array)
     list = []
+
     movies_array.each { |movie| list << new(movie) }
+    
     list
   end
 
