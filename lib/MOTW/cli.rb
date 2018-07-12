@@ -43,6 +43,7 @@ class Cli
   end
 
   def movie_list
+# re-add logic to scraper and movie so the list is cached
     list = Scraper.scrape_list
 
     puts ''
