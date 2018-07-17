@@ -2,18 +2,22 @@
 class Scraper
 
   def self.scrape_list
-    imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
-    movie_elements = imdb.css('div.sub-list')[0].css('div.list_item')
+    if Movie.all.empty?
+      imdb = Nokogiri::HTML(open("https://www.imdb.com/movies-in-theaters"))
+      movie_elements = imdb.css('div.sub-list')[0].css('div.list_item')
 
-    movie_hashes = movie_elements.collect do |element|
-      movie = {
-        description: strip_text( element.css('div.outline') ),
-        metascore: strip_text( element.css('div.rating_txt span')[0] ),
-        title: strip_text( element.css('a')[1] ).split(' (')[0]
-      }
+      movie_hashes = movie_elements.collect do |element|
+        movie = {
+          description: strip_text( element.css('div.outline') ),
+          metascore: strip_text( element.css('div.rating_txt span')[0] ),
+          title: strip_text( element.css('a')[1] ).split(' (')[0]
+        }
+      end
+
+      Movie.create_list( movie_hashes )
     end
-
-    Movie.create_list( movie_hashes )
+    
+    Movie.all
   end
 
   def self.strip_text(node)

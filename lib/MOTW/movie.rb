@@ -3,6 +3,8 @@ class Movie
   attr_accessor(  :cast, :critic_tomatometer, :description, :metascore,
                   :title, :user_tomatometer, :year  )
 
+  LIST = []
+
   def initialize(movie_hash)
     movie_hash.each do |key, value|
       self.send( ( "#{key}=" ), value )
@@ -11,11 +13,11 @@ class Movie
   end
 
   def self.create_list(movies_array)
-    list = []
+    movies_array.each { |movie| LIST << new(movie) }
+  end
 
-    movies_array.each { |movie| list << new(movie) }
-    
-    list
+  def self.all
+    LIST
   end
 
 end
