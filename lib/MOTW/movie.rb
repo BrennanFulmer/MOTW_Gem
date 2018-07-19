@@ -13,7 +13,12 @@ class Movie
   end
 
   def self.create_list(movies_array)
-    movies_array.each { |movie| LIST << new(movie) }
+    if all.empty?
+      movies_array.each { |movie| LIST << new(movie) }
+      all
+    else
+      all
+    end
   end
 
   def self.all
